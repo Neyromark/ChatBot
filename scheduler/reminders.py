@@ -51,8 +51,8 @@ def _text(kind: str, item: dict, now: datetime) -> str:
     hhmm = item["when"].strftime("%H:%M")
     minutes = max(int((item["when"] - now).total_seconds() // 60) + 1, 1)
     if kind == "start":
-        return f"⏰ Через {minutes} мин начало задачи: {item['title']}\nНачало в {hhmm}."
-    return f"🔔 Через {minutes} мин дедлайн задачи: {item['title']}\nСрок до {hhmm}."
+        return f"Через {minutes} мин. начало выполнения задачи: {item['title']}\nНачало в {hhmm}."
+    return f"Через {minutes} мин. истекает срок исполнения задачи: {item['title']}\nСрок исполнения: до {hhmm}."
 
 
 async def _remind(bot: Bot) -> int:

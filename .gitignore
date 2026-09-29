@@ -10,3 +10,4 @@ mailing/__pycache__/
 bot/__pycache__/
 .DS_Store
 .env
+config.py

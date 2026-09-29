@@ -41,9 +41,9 @@ async def _deliver_csv_as_text(event, csv_bytes: bytes, filename: str):
     if truncated:
         text = text[:max_len]
 
-    body = f"📄 {filename}\n```\n{text}\n```"
+    body = f"{filename}\n```\n{text}\n```"
     if truncated:
-        body += "\n⚠️ Показан фрагмент, файл обрезан."
+        body += "\nОтображён фрагмент файла."
 
     await event.message.answer(body)
 
@@ -197,7 +197,7 @@ def export_tasks(db: Session, org_id: int) -> bytes:
     data.append(["Общее", "Всего задач", total_tasks])
     data.append(["Общее", "Активных задач", active_tasks])
     data.append(["Общее", "Доля активных, %", active_share])
-    data.append(["Общее", "Задач в пуле (без исполнителя)", pool_tasks])
+    data.append(["Общее", "Задач без исполнителя (в общем перечне)", pool_tasks])
     data.append(["Общее", "Суммарный вес", total_weight])
     data.append(["Общее", "Суммарная оценка, мин", total_minutes])
     data.append(["Общее", "Суммарная оценка, ч", round(total_minutes / 60, 1)])
@@ -274,5 +274,5 @@ def export_task_completion(db: Session, org_id: int) -> bytes:
         ])
 
     headers = ["InstanceId", "Задача", "Исполнитель", "План старт",
-               "План дедлайн", "Факт завершения", "Факт минут", "Выполнена"]
+               "Плановый срок исполнения", "Факт завершения", "Фактическая продолжительность (мин)", "Выполнена"]
     return _csv_bytes(headers, data)

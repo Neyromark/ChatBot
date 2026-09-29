@@ -6,40 +6,40 @@ from models import ROLE_OWNER, ROLE_ADMIN, ROLE_EMPLOYEE
 
 class Texts():
     INTRO_TEXT = (
-        "Здравствуйте! 👋\n"
-        "Я бот для управления сменами, задачами и загрузкой сотрудников.\n"
-        "Помогу администратору быстро составлять расписание и раздавать задачи, "
-        "а сотрудникам — видеть свои дела и получать уведомления.\n"
-        "Давайте познакомимся.\n"
-        "Напишите, пожалуйста, ваше имя:"
+        "Добро пожаловать.\n"
+        "Данный сервис предназначен для управления сменами, задачами и загрузкой сотрудников.\n"
+        "Администраторам доступно формирование расписания и распределение задач, "
+        "сотрудникам — просмотр назначенных задач и получение уведомлений.\n"
+        "Для продолжения необходимо пройти регистрацию.\n"
+        "Укажите, пожалуйста, ваше имя:"
     )
 
-    ASK_LAST_NAME = "Отлично! Теперь напиши свою фамилию:"
-    ASK_PHONE = "Спасибо! Теперь напиши номер телефона:"
-    FINISH_TEXT = "Готово! Ты зарегистрирован ✅"
-    INVALID_PHONE = "Похоже, это не похоже на номер телефона. Попробуй ещё раз:"
-    SECOND_REGISTR = "Вы уже зарегистрированы. Напиши /start, чтобы начать заново."
-    NO_COMPANI = "Вас, нет не в одной организации, хотите присоединиться или создать новую?"
+    ASK_LAST_NAME = "Укажите, пожалуйста, вашу фамилию:"
+    ASK_PHONE = "Укажите, пожалуйста, номер телефона:"
+    FINISH_TEXT = "Регистрация успешно завершена."
+    INVALID_PHONE = "Номер телефона указан некорректно. Повторите ввод:"
+    SECOND_REGISTR = "Вы уже зарегистрированы. Для повторного запуска используйте команду /start."
+    NO_COMPANI = "Вы не состоите ни в одной организации. Выберите действие: присоединиться к существующей или создать новую."
 
-    WAITING_NAME_COMPANI = "Введите название компании"
-    WAITING_ORG_CITY = "Введите город в котором работает компания"
-    WAITING_ORG_TYPE = "Введите тип организации"
+    WAITING_NAME_COMPANI = "Укажите наименование организации:"
+    WAITING_ORG_CITY = "Укажите город местонахождения организации:"
+    WAITING_ORG_TYPE = "Укажите тип организации:"
 
-    WAITING_COD_ORGANIZATION = "Введите код организации для присоединения (его можно узнать у руководителя организации)"
+    WAITING_COD_ORGANIZATION = "Введите код организации для присоединения (код предоставляется руководителем организации):"
 
-    PROFILE_TITLE = "👤 Ваш профиль"
+    PROFILE_TITLE = "Профиль пользователя"
     PROFILE_EDIT_NAME = "Введите новое имя:"
     PROFILE_EDIT_LAST_NAME = "Введите новую фамилию:"
-    PROFILE_EDIT_PHONE = "Отправьте новый номер телефона"
+    PROFILE_EDIT_PHONE = "Направьте новый номер телефона:"
 
     ANNOUNCEMENTS_TITLE = "Управление объявлениями"
     ANNOUNCEMENTS_ASK_TITLE = "Введите заголовок объявления:"
     ANNOUNCEMENTS_ASK_BODY = "Введите текст объявления:"
     ANNOUNCEMENTS_ASK_TARGET = "Кому отправить объявление?"
-    ANNOUNCEMENTS_ASK_USERS = "Отметьте сотрудников, которым нужно доставить объявление, и нажмите «Готово»."
-    ANNOUNCEMENTS_SAVED = "Объявление создано и отправлено."
-    ANNOUNCEMENTS_EMPTY = "Объявлений пока нет."
-    ANNOUNCEMENTS_UNREAD = "У вас {count} непрочитанных объявлений"
+    ANNOUNCEMENTS_ASK_USERS = "Отметьте сотрудников — получателей объявления и нажмите «Готово»."
+    ANNOUNCEMENTS_SAVED = "Объявление создано и направлено адресатам."
+    ANNOUNCEMENTS_EMPTY = "Объявления отсутствуют."
+    ANNOUNCEMENTS_UNREAD = "Количество непрочитанных объявлений: {count}"
 
     ORG_INFO_TITLE = "Информация об организации"
 
@@ -48,103 +48,103 @@ class Texts():
     ORG_EDIT_CITY = "Введите новый город:"
     ORG_EDIT_TYPE = "Выберите новый тип организации:"
     ORG_UPDATED = "Настройки организации обновлены."
-    ORG_NAME_INVALID = "Название не может быть пустым."
+    ORG_NAME_INVALID = "Наименование не может быть пустым."
 
     ANN_TITLE = "Объявления"
-    ANN_EMPTY = "У вас нет непрочитанных объявлений."
-    ANN_SEARCH_TITLE = "Введите часть названия объявления для поиска:"
+    ANN_EMPTY = "Непрочитанные объявления отсутствуют."
+    ANN_SEARCH_TITLE = "Введите часть заголовка объявления для поиска:"
     ANN_SEARCH_DATE = "Введите дату в формате ГГГГ-ММ-ДД (например, 2026-09-27):"
-    ANN_SEARCH_BY = "Как искать объявления?"
-    ANN_SEARCH_INVALID_DATE = "Неверный формат даты. Используйте ГГГГ-ММ-ДД."
-    ANN_NOT_FOUND = "Ничего не найдено."
+    ANN_SEARCH_BY = "Выберите критерий поиска объявлений:"
+    ANN_SEARCH_INVALID_DATE = "Неверный формат даты. Требуемый формат: ГГГГ-ММ-ДД."
+    ANN_NOT_FOUND = "По вашему запросу ничего не найдено."
 
     STAFF_TITLE = "Управление сотрудниками"
-    STAFF_EMPTY = "В организации нет сотрудников."
+    STAFF_EMPTY = "В организации отсутствуют сотрудники."
     STAFF_LIST_HEADER = "Список сотрудников:\n"
-    STAFF_ASK_NUMBER_FIRE = "Введите номер сотрудника, которого нужно уволить:"
-    STAFF_ASK_NUMBER_ROLE = "Введите номер сотрудника, которому нужно изменить системную роль:"
-    STAFF_ASK_NUMBER_NAME_ROLE = "Введите номер сотрудника, которому нужно изменить роль в организации:"
+    STAFF_ASK_NUMBER_FIRE = "Введите номер сотрудника, подлежащего увольнению:"
+    STAFF_ASK_NUMBER_ROLE = "Введите номер сотрудника, для которого изменяется системная роль:"
+    STAFF_ASK_NUMBER_NAME_ROLE = "Введите номер сотрудника, для которого изменяется должность в организации:"
     STAFF_ASK_NEW_ROLE = "Выберите новую системную роль:"
-    STAFF_ASK_NAME_ORG_ROLE = "Введите название роли в организации:"
-    STAFF_BAD_NUMBER = "Неверный номер. Введите число из списка."
-    STAFF_ROLE_UPDATED = "Системная роль обновлена."
-    STAFF_NAME_ROLE_UPDATED = "Роль в организации обновлена."
-    STAFF_FIRED = "Сотрудник уволен."
-    STAFF_CANNOT_FIRE_SELF = "Нельзя уволить самого себя."
-    STAFF_CANNOT_FIRE_OWNER = "Нельзя уволить владельца организации."
+    STAFF_ASK_NAME_ORG_ROLE = "Введите наименование должности в организации:"
+    STAFF_BAD_NUMBER = "Указан неверный номер. Введите номер из списка."
+    STAFF_ROLE_UPDATED = "Системная роль изменена."
+    STAFF_NAME_ROLE_UPDATED = "Должность в организации изменена."
+    STAFF_FIRED = "Сотрудник исключён из организации."
+    STAFF_CANNOT_FIRE_SELF = "Исключение собственной учётной записи из организации не допускается."
+    STAFF_CANNOT_FIRE_OWNER = "Исключение владельца из организации не допускается."
 
     TASKS_TITLE = "Управление задачами"
     TASKS_CREATE_TITLE = "Введите название задачи:"
-    TASKS_CREATE_DESC = "Введите описание задачи (или «-», чтобы пропустить):"
-    TASKS_CREATE_ASSIGNEE = "Кому назначить задачу?"
+    TASKS_CREATE_DESC = "Введите описание задачи (либо «-» для пропуска):"
+    TASKS_CREATE_ASSIGNEE = "Выберите исполнителя задачи:"
     TASKS_CREATE_ASSIGNEE_USER = "Введите номер сотрудника из списка:"
     TASKS_CREATE_WEIGHT = "Введите вес задачи (1–10):"
-    TASKS_CREATE_MINUTES = "Введите оценочное время в минутах:"
-    TASKS_CREATED = "Задача создана."
-    TASKS_EMPTY_ACTIVE = "Сейчас никто не выполняет задачи."
-    TASKS_EMPTY_POOL = "Нет свободных задач с дедлайном."
+    TASKS_CREATE_MINUTES = "Введите плановую продолжительность в минутах:"
+    TASKS_CREATED = "Задача успешно создана."
+    TASKS_EMPTY_ACTIVE = "В настоящее время задачи не выполняются."
+    TASKS_EMPTY_POOL = "Свободные задачи со сроком исполнения отсутствуют."
     TASKS_ASK_EDIT_NUMBER = "Введите номер задачи из списка:"
-    TASKS_ASK_EDIT_FIELD = "Что изменить?"
-    TASKS_ASK_NEW_TITLE = "Введите новое название:"
+    TASKS_ASK_EDIT_FIELD = "Выберите редактируемый параметр:"
+    TASKS_ASK_NEW_TITLE = "Введите новое наименование:"
     TASKS_ASK_NEW_DESC = "Введите новое описание:"
     TASKS_ASK_NEW_WEIGHT = "Введите новый вес (1–10):"
-    TASKS_ASK_NEW_MINUTES = "Введите новое оценочное время (минуты):"
-    TASKS_UPDATED = "Задача обновлена."
-    TASKS_BAD_NUMBER = "Неверный номер."
+    TASKS_ASK_NEW_MINUTES = "Введите новую плановую продолжительность (в минутах):"
+    TASKS_UPDATED = "Данные задачи обновлены."
+    TASKS_BAD_NUMBER = "Указан неверный номер."
 
-    TASK_TITLE = "1/9. Введите название задачи (3–200 символов):"
-    TASK_DESCRIPTION = "2/9. Введите описание задачи:"
-    TASK_ASSIGNEE = "3/9. Кому назначить задачу?"
-    TASK_ORG_ROLE_NAME = "Введите название роли в организации (например, «Курьер»):"
+    TASK_TITLE = "Шаг 1 из 9. Введите наименование задачи (от 3 до 200 символов):"
+    TASK_DESCRIPTION = "Шаг 2 из 9. Введите описание задачи:"
+    TASK_ASSIGNEE = "Шаг 3 из 9. Выберите исполнителя задачи:"
+    TASK_ORG_ROLE_NAME = "Введите наименование должности в организации (например, «Курьер»):"
     TASK_ORG_ROLE_NOT_FOUND = (
-        "Сотрудников с такой ролью нет. "
-        "Проверьте название или выберите другой вариант."
+        "Сотрудники с указанной должностью не найдены. "
+        "Проверьте наименование либо выберите другой вариант."
     )
-    TASK_EXTERNAL_ROLE = "Введите название внешней должности (например, «Курьер»):"
-    TASK_RECURRENCE = "4/9. Задача повторяется?"
-    TASK_DEADLINE = "5/9. Введите дедлайн в формате ДД.ММ.ГГГГ ЧЧ:ММ"
-    TASK_START_TIME_ASK = "6/9. Указать точное время начала?"
+    TASK_EXTERNAL_ROLE = "Введите наименование внешней должности (например, «Курьер»):"
+    TASK_RECURRENCE = "Шаг 4 из 9. Укажите периодичность задачи:"
+    TASK_DEADLINE = "Шаг 5 из 9. Введите срок исполнения в формате ДД.ММ.ГГГГ ЧЧ:ММ"
+    TASK_START_TIME_ASK = "Шаг 6 из 9. Требуется ли указать время начала выполнения?"
     TASK_START_TIME = "Введите время начала в формате ДД.ММ.ГГГГ ЧЧ:ММ"
-    TASK_WEEKDAYS = "5/9. Выберите дни недели (можно несколько):"
-    TASK_TIME = "6/9. Введите дедлайн — время суток, к которому задача должна быть выполнена (ЧЧ:ММ):"
-    TASK_START_TIME_REGULAR = "Введите время начала (ЧЧ:ММ), раньше дедлайна:"
-    TASK_START_BEFORE_DEADLINE = "Время начала должно быть раньше дедлайна. Введите время ещё раз."
+    TASK_WEEKDAYS = "Шаг 5 из 9. Выберите дни недели (допускается выбор нескольких):"
+    TASK_TIME = "Шаг 6 из 9. Введите срок исполнения — время суток, к которому задача должна быть выполнена (ЧЧ:ММ):"
+    TASK_START_TIME_REGULAR = "Введите время начала (ЧЧ:ММ), предшествующее сроку исполнения:"
+    TASK_START_BEFORE_DEADLINE = "Время начала должно предшествовать сроку исполнения. Повторите ввод."
 
-    TASK_PERIOD_ASK = "8/9. Период действия правила:"
+    TASK_PERIOD_ASK = "Шаг 8 из 9. Укажите период действия расписания:"
     TASK_PERIOD_START = "Введите дату начала (ДД.ММ.ГГГГ):"
-    TASK_PERIOD_END = "Введите дату окончания (ДД.ММ.ГГГГ) или «-», если бессрочно:"
-    TASK_ESTIMATED_MINUTES = "7/9. Оценочное время выполнения (в минутах):"
-    TASK_WEIGHT = "8/9. Вес задачи (1–10):"
-    TASK_CONFIRM_TITLE = "9/9. Проверьте данные задачи:"
-    TASK_INVALID_TITLE = "Название должно быть от 3 до 200 символов."
-    TASK_INVALID_DATETIME = "Неверный формат. Ожидается ДД.ММ.ГГГГ ЧЧ:ММ."
-    TASK_INVALID_DATE = "Неверный формат даты. Ожидается ДД.ММ.ГГГГ."
-    TASK_INVALID_TIME = "Неверный формат времени. Ожидается ЧЧ:ММ."
+    TASK_PERIOD_END = "Введите дату окончания (ДД.ММ.ГГГГ) либо «-» для бессрочного действия:"
+    TASK_ESTIMATED_MINUTES = "Шаг 7 из 9. Плановая продолжительность выполнения (в минутах):"
+    TASK_WEIGHT = "Шаг 8 из 9. Вес задачи (1–10):"
+    TASK_CONFIRM_TITLE = "Шаг 9 из 9. Проверьте данные задачи:"
+    TASK_INVALID_TITLE = "Наименование должно содержать от 3 до 200 символов."
+    TASK_INVALID_DATETIME = "Неверный формат. Требуемый формат: ДД.ММ.ГГГГ ЧЧ:ММ."
+    TASK_INVALID_DATE = "Неверный формат даты. Требуемый формат: ДД.ММ.ГГГГ."
+    TASK_INVALID_TIME = "Неверный формат времени. Требуемый формат: ЧЧ:ММ."
     TASK_INVALID_INT = "Введите целое число."
-    TASK_INVALID_RANGE = "Значение вне допустимого диапазона."
-    TASK_WEEKDAYS_MIN = "Выберите хотя бы один день недели."
+    TASK_INVALID_RANGE = "Значение находится вне допустимого диапазона."
+    TASK_WEEKDAYS_MIN = "Необходимо выбрать не менее одного дня недели."
     TASK_CANCELLED = "Создание задачи отменено."
 
     ANN_MY_TITLE = "Мои объявления"
-    ANN_MY_EMPTY = "За этот день объявлений нет."
+    ANN_MY_EMPTY = "За указанную дату объявления отсутствуют."
     ANN_MY_ASK_DATE = "Введите дату в формате ДД.ММ.ГГГГ:"
-    ANN_MY_INVALID_DATE = "Неверный формат. Используйте ДД.ММ.ГГГГ."
+    ANN_MY_INVALID_DATE = "Неверный формат. Требуемый формат: ДД.ММ.ГГГГ."
     ANN_MY_NOT_FOUND = "Объявление не найдено."
 
-    REPORT_TITLE = "Выгрузка отчётности"
+    REPORT_TITLE = "Формирование отчётности"
     REPORT_CHOOSE = "Выберите тип отчёта:"
-    REPORT_ASK_DATE_FROM = "Введите начальную дату (ДД.ММ.ГГГГ):"
-    REPORT_ASK_DATE_TO = "Введите конечную дату (ДД.ММ.ГГГГ):"
-    REPORT_INVALID_DATE = "Неверный формат. Используйте ДД.ММ.ГГГГ."
-    REPORT_EMPTY = "За указанный период данных нет."
-    REPORT_READY = "Отчёт готов."
-    REPORT_ERROR = "Не удалось сформировать отчёт, попробуйте позже."
+    REPORT_ASK_DATE_FROM = "Введите начальную дату периода (ДД.ММ.ГГГГ):"
+    REPORT_ASK_DATE_TO = "Введите конечную дату периода (ДД.ММ.ГГГГ):"
+    REPORT_INVALID_DATE = "Неверный формат. Требуемый формат: ДД.ММ.ГГГГ."
+    REPORT_EMPTY = "За указанный период данные отсутствуют."
+    REPORT_READY = "Отчёт сформирован."
+    REPORT_ERROR = "Не удалось сформировать отчёт. Повторите попытку позже."
 
     MY_TASKS_TITLE = "Мои задачи"
-    MY_TASKS_EMPTY = "У вас нет активных задач на сегодня."
-    MY_TASKS_STARTED = "Задача взята в работу ✅"
-    MY_TASKS_DONE = "Задача отмечена как выполненная ✅"
-    MY_TASKS_NOT_FOUND = "Задача не найдена или уже недоступна."
+    MY_TASKS_EMPTY = "Активные задачи на текущую дату отсутствуют."
+    MY_TASKS_STARTED = "Задача принята в работу."
+    MY_TASKS_DONE = "Задача отмечена как выполненная."
+    MY_TASKS_NOT_FOUND = "Задача не найдена либо более недоступна."
 
 class Buttons():
 
@@ -180,34 +180,34 @@ class Buttons():
             builder.row(CallbackButton(text="Управление сотрудниками", payload="manage_staff"))
             builder.row(CallbackButton(text="Управление объявлениями", payload="management_announcement"))
             builder.row(CallbackButton(text="Управление задачами", payload="manage_tasks"))
-            builder.row(CallbackButton(text="Выгрузка отчетности", payload="get_statistiks"))
+            builder.row(CallbackButton(text="Формирование отчётности", payload="get_statistiks"))
 
         if id_role == ROLE_ADMIN:
-            builder.row(CallbackButton(text="О организации", payload="org_informations"))
+            builder.row(CallbackButton(text="Сведения об организации", payload="org_informations"))
 
         if id_role == ROLE_OWNER:
             builder.row(CallbackButton(text="Настройки организации", payload="org_settings"))
 
         builder.row(CallbackButton(text="Профиль", payload="profile"))
-        builder.row(CallbackButton(text="Выйти из организации", payload="exit"))
+        builder.row(CallbackButton(text="Выйти из состава организации", payload="exit"))
 
         return builder
 
 
     builder_please_phone = InlineKeyboardBuilder()
     builder_please_phone.row(
-        RequestContactButton(text="Поделиться номером")
+        RequestContactButton(text="Направить номер телефона")
     )
 
     builder_menu = InlineKeyboardBuilder()
     builder_menu.row(
-        CallbackButton(text="Перейти в меню", payload="start_menu")
+        CallbackButton(text="Главное меню", payload="start_menu")
     )
 
     employee_new_organ = InlineKeyboardBuilder()
     employee_new_organ.row(
-            CallbackButton(text="Присоединиться", payload="start_employees"),
-            CallbackButton(text="Создать организацию", payload="new_organization"),
+            CallbackButton(text="Присоединиться к организации", payload="start_employees"),
+            CallbackButton(text="Зарегистрировать организацию", payload="new_organization"),
     )
 
     builder_profile = InlineKeyboardBuilder()
@@ -241,7 +241,7 @@ class Buttons():
         CallbackButton(text="Всем сотрудникам", payload="announcement_target_all")
     )
     builder_announcement_target.row(
-        CallbackButton(text="Конкретным", payload="announcement_target_users")
+        CallbackButton(text="Выбранным сотрудникам", payload="announcement_target_users")
     )
     builder_announcement_target.row(
         CallbackButton(text="Назад", payload="management_announcement")
@@ -275,10 +275,10 @@ class Buttons():
 
     builder_announcements = InlineKeyboardBuilder()
     builder_announcements.row(
-        CallbackButton(text="Новые (непрочитанные)", payload="ann_list_unread")
+        CallbackButton(text="Непрочитанные", payload="ann_list_unread")
     )
     builder_announcements.row(
-        CallbackButton(text="Созданные сегодня", payload="ann_list_today")
+        CallbackButton(text="Опубликованные сегодня", payload="ann_list_today")
     )
     builder_announcements.row(
         CallbackButton(text="Поиск", payload="ann_search")
@@ -310,13 +310,13 @@ class Buttons():
     # Меню управления сотрудниками
     builder_manage_staff = InlineKeyboardBuilder()
     builder_manage_staff.row(
-        CallbackButton(text="Уволить", payload="staff_action_fire")
+        CallbackButton(text="Исключить из организации", payload="staff_action_fire")
     )
     builder_manage_staff.row(
         CallbackButton(text="Изменить системную роль", payload="staff_action_role")
     )
     builder_manage_staff.row(
-        CallbackButton(text="Изменить роль в организации", payload="staff_action_name_role")
+        CallbackButton(text="Изменить должность в организации", payload="staff_action_name_role")
     )
     builder_manage_staff.row(
         CallbackButton(text="← Назад", payload="start_menu")
@@ -337,7 +337,7 @@ class Buttons():
         """
         b = InlineKeyboardBuilder()
         b.row(CallbackButton(
-            text="Да, подтверждаю",
+            text="Подтвердить",
             payload=f"staff_confirm:{action}:{member_id}",
         ))
         b.row(CallbackButton(text="← Отмена", payload="staff_cancel"))
@@ -349,13 +349,13 @@ class Buttons():
         CallbackButton(text="Создать задачу", payload="task_create")
     )
     builder_manage_tasks.row(
-        CallbackButton(text="Активные (кто что делает)", payload="task_active")
+        CallbackButton(text="Задачи в работе", payload="task_active")
     )
     builder_manage_tasks.row(
-        CallbackButton(text="Свободные с дедлайном", payload="task_pool")
+        CallbackButton(text="Свободные задачи со сроком", payload="task_pool")
     )
     builder_manage_tasks.row(
-        CallbackButton(text="Редактировать", payload="task_edit")
+        CallbackButton(text="Редактировать задачу", payload="task_edit")
     )
     builder_manage_tasks.row(
         CallbackButton(text="← Назад", payload="start_menu")
@@ -363,9 +363,9 @@ class Buttons():
 
     # Кому назначить
     builder_task_assignee = InlineKeyboardBuilder()
-    builder_task_assignee.row(CallbackButton(text="Конкретному сотруднику", payload="task_assignee_user"))
+    builder_task_assignee.row(CallbackButton(text="Назначить сотруднику", payload="task_assignee_user"))
     # builder_task_assignee.row(CallbackButton(text="🛠️ Роли", payload="task_assignee_role"))
-    builder_task_assignee.row(CallbackButton(text=" В пул (свободная)", payload="task_assignee_pool"))
+    builder_task_assignee.row(CallbackButton(text="В общий перечень (свободная)", payload="task_assignee_pool"))
     builder_task_assignee.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
     builder_reports = InlineKeyboardBuilder()
@@ -380,7 +380,7 @@ class Buttons():
     builder_task_edit_field.row(CallbackButton(text="Название", payload="task_edit_title"))
     builder_task_edit_field.row(CallbackButton(text="Описание", payload="task_edit_desc"))
     builder_task_edit_field.row(CallbackButton(text="Вес", payload="task_edit_weight"))
-    builder_task_edit_field.row(CallbackButton(text="Время, мин", payload="task_edit_minutes"))
+    builder_task_edit_field.row(CallbackButton(text="Продолжительность, мин", payload="task_edit_minutes"))
     builder_task_edit_field.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
     @staticmethod
@@ -393,14 +393,14 @@ class Buttons():
         return b
 
     builder_task_assignee = InlineKeyboardBuilder()
-    builder_task_assignee.row(CallbackButton(text="Сотруднику", payload="task_assignee_user"))
+    builder_task_assignee.row(CallbackButton(text="Назначить сотруднику", payload="task_assignee_user"))
     builder_task_assignee.row(CallbackButton(text="По роли в организации", payload="task_assignee_role"))
-    builder_task_assignee.row(CallbackButton(text="Открытая (в пул)", payload="task_assignee_pool"))
+    builder_task_assignee.row(CallbackButton(text="Свободная (в общий перечень)", payload="task_assignee_pool"))
     builder_task_assignee.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
     builder_task_recurrence = InlineKeyboardBuilder()
     builder_task_recurrence.row(CallbackButton(text="По расписанию", payload="task_recurrence_regular"))
-    builder_task_recurrence.row(CallbackButton(text="Разовая", payload="task_recurrence_onetime"))
+    builder_task_recurrence.row(CallbackButton(text="Однократная", payload="task_recurrence_onetime"))
     builder_task_recurrence.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
     builder_task_yes_no = InlineKeyboardBuilder()
@@ -409,7 +409,7 @@ class Buttons():
     builder_task_yes_no.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
     builder_task_period = InlineKeyboardBuilder()
-    builder_task_period.row(CallbackButton(text="Указать даты", payload="task_period_dates"))
+    builder_task_period.row(CallbackButton(text="Указать период", payload="task_period_dates"))
     builder_task_period.row(CallbackButton(text="Бессрочно", payload="task_period_infinite"))
     builder_task_period.row(CallbackButton(text="← Отмена", payload="task_cancel"))
 
@@ -419,7 +419,7 @@ class Buttons():
         days = [("Пн", 1), ("Вт", 2), ("Ср", 4), ("Чт", 8), ("Пт", 16), ("Сб", 32), ("Вс", 64)]
         row = []
         for name, bit in days:
-            mark = "✅" if bit in selected else "☐"
+            mark = "[x]" if bit in selected else "[ ]"
             row.append(CallbackButton(text=f"{mark} {name}", payload=f"task_wd_toggle:{bit}"))
         # по 4 в ряд
         b.row(*row[:4])
@@ -478,7 +478,7 @@ class Buttons():
     def builder_announcement_read(announcement_id: int) -> InlineKeyboardBuilder:
         b = InlineKeyboardBuilder()
         b.row(CallbackButton(
-            text="✅ Прочитано",
+            text="Отметить прочитанным",
             payload=f"announcement_read:{announcement_id}",
         ))
         return b
@@ -494,13 +494,13 @@ class Buttons():
         for a in announcements:
             title = (a.title or "—")[:40]
             b.row(CallbackButton(
-                text=f"📢 {title}",
+                text=title,
                 payload=f"ann_my_view:{a.announcement_id}",
             ))
         # Навигация по датам
-        b.row(CallbackButton(text="День назад", payload=f"ann_my_shift:{date_str}:-1"))
+        b.row(CallbackButton(text="Предыдущий день", payload=f"ann_my_shift:{date_str}:-1"))
         b.row(CallbackButton(text="Другая дата", payload=f"ann_my_pick_date:{date_str}"))
-        b.row(CallbackButton(text="День вперёд", payload=f"ann_my_shift:{date_str}:+1"))
+        b.row(CallbackButton(text="Следующий день", payload=f"ann_my_shift:{date_str}:+1"))
         b.row(CallbackButton(text="← Назад", payload="management_announcement"))
         return b
 
@@ -532,7 +532,7 @@ class Buttons():
         for it in items:
 
             b.row(CallbackButton(
-                text=f"📌 {it['number']}. {it['title'][:40]}",
+                text=f"{it['number']}. {it['title'][:40]}",
                 payload=f"my_task_view:{it['instance_id']}",
             ))
         b.row(CallbackButton(text="← Назад", payload="start_menu"))
@@ -543,16 +543,16 @@ class Buttons():
         b = InlineKeyboardBuilder()
         if can_start:
             b.row(CallbackButton(
-                text="▶️ Начать выполнение",
+                text="Приступить к выполнению",
                 payload=f"my_task_start:{instance_id}",
             ))
         if can_finish:
             b.row(CallbackButton(
-                text="✅ Отметить выполненной",
+                text="Отметить выполненной",
                 payload=f"my_task_finish:{instance_id}",
             ))
         b.row(CallbackButton(
-            text="📄 Подробнее",
+            text="Подробные сведения",
             payload=f"my_task_details:{instance_id}",
         ))
         b.row(CallbackButton(text="← Назад", payload="my_tasks"))

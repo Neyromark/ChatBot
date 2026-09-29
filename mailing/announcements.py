@@ -31,7 +31,7 @@ def get_unread_max_ids(session: Session, announcement_id: int) -> list[int]:
 
 def format_announcement_text(ann: Announcement) -> str:
     title = ann.title or "Без заголовка"
-    return f"📢 {title}\n\n{ann.body}"
+    return f"{title}\n\n{ann.body}"
 
 
 async def send_announcement(bot: Bot, announcement_id: int) -> dict:

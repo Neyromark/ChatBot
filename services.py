@@ -292,6 +292,15 @@ def count_org_members(db: Session, org_id: int) -> int:
 
 
 def delete_organization(db: Session, org_id: int) -> None:
+    from models import TaskInstance
+    ann_ids = db.query(Announcement.announcement_id).filter(Announcement.organization_id == org_id)
+    db.query(AnnouncementRecipient).filter(
+        AnnouncementRecipient.announcement_id.in_(ann_ids)
+    ).delete(synchronize_session=False)
+    db.query(Announcement).filter(Announcement.organization_id == org_id).delete(synchronize_session=False)
+    task_ids = db.query(Task.task_id).filter(Task.organization_id == org_id)
+    db.query(TaskInstance).filter(TaskInstance.task_id.in_(task_ids)).delete(synchronize_session=False)
+    db.query(Task).filter(Task.organization_id == org_id).delete(synchronize_session=False)
     db.query(Member).filter(Member.organization_id == org_id).delete()
     db.query(Organization).filter(Organization.organization_id == org_id).delete()
     db.commit()

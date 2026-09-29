@@ -48,7 +48,7 @@ async def _send_report(event, exporter_func, filename: str, caption: str):
             await event.message.answer("Вы не состоите в организации.")
             return
         if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         try:
@@ -61,7 +61,7 @@ async def _send_report(event, exporter_func, filename: str, caption: str):
     if isinstance(csv_bytes, str):
         csv_bytes = csv_bytes.encode("utf-8-sig")
     if not csv_bytes:
-        await event.message.answer("Данных за период нет.")
+        await event.message.answer("За указанный период данные отсутствуют.")
         return
 
     # 2. Формируем медиа-объект из буфера (в памяти, без временных файлов)
@@ -85,9 +85,9 @@ async def _send_report(event, exporter_func, filename: str, caption: str):
     if truncated:
         text = text[:max_len]
 
-    body = f"📄 {filename}\n```\n{text}\n```"
+    body = f"{filename}\n```\n{text}\n```"
     if truncated:
-        body += "\n⚠️ Показан фрагмент."
+        body += "\nОтображён фрагмент файла."
     await event.message.answer(body)
 
 async def create_org_with_type(event, user_id, org_type_id):
@@ -96,7 +96,7 @@ async def create_org_with_type(event, user_id, org_type_id):
     with db.session() as session:
         user = get_user_by_max_id(session, user_id)
         if user is None:
-            await event.message.answer("Сначала зарегистрируйтесь через /start.")
+            await event.message.answer("Для продолжения необходимо пройти регистрацию: /start.")
             return
 
         org = create_organization(
@@ -280,7 +280,7 @@ async def step_handler(event: MessageCreated):
             user = get_user_by_max_id(session, user_id)
             if user is None:
                 await event.message.answer(
-                    "Сначала зарегистрируйтесь через /start."
+                    "Для продолжения необходимо пройти регистрацию: /start."
                 )
                 clear_state(user_id)
                 set_step(user_id, Steps.START)
@@ -334,7 +334,7 @@ async def step_handler(event: MessageCreated):
                 session.commit()
         clear_state(user_id)
         set_step(user_id, Steps.DONE)
-        await event.message.answer(f"Имя обновлено: {text}")
+        await event.message.answer(f"Имя изменено: {text}")
         await handle_profile(event)  # вернуть меню профиля
         return
 
@@ -347,7 +347,7 @@ async def step_handler(event: MessageCreated):
                 session.commit()
         clear_state(user_id)
         set_step(user_id, Steps.DONE)
-        await event.message.answer(f"Фамилия обновлена: {text}")
+        await event.message.answer(f"Фамилия изменена: {text}")
         await handle_profile(event)
         return
 
@@ -358,7 +358,7 @@ async def step_handler(event: MessageCreated):
             .replace(" ", "").replace("(", "").replace(")", "")
         )
         if not cleaned.isdigit():
-            await event.message.answer("Это не похоже на номер, попробуйте ещё раз.")
+            await event.message.answer("Номер телефона указан некорректно. Повторите ввод.")
             return
 
         with db.session() as session:
@@ -368,7 +368,7 @@ async def step_handler(event: MessageCreated):
                 session.commit()
         clear_state(user_id)
         set_step(user_id, Steps.DONE)
-        await event.message.answer(f"Телефон обновлён: {text}")
+        await event.message.answer(f"Номер телефона изменён: {text}")
         await handle_profile(event)
         return
 
@@ -475,7 +475,7 @@ async def step_handler(event: MessageCreated):
         data = get_data(user_id)
         member_id = data.get("staff_target_member_id")
         if member_id is None:
-            await event.message.answer("Не выбран сотрудник.")
+            await event.message.answer("Сотрудник не выбран.")
             clear_state(user_id)
             set_step(user_id, Steps.DONE)
             return
@@ -483,7 +483,7 @@ async def step_handler(event: MessageCreated):
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
 
             target = get_member_by_id(session, member_id)
@@ -502,7 +502,7 @@ async def step_handler(event: MessageCreated):
         await _handle_staff_number_input(
             event, user_id, text,
             action="fire",
-            confirm_text="Уволить сотрудника «{fio}»?",
+            confirm_text="Исключить сотрудника «{fio}» из организации?",
         )
         return
 
@@ -518,7 +518,7 @@ async def step_handler(event: MessageCreated):
         await _handle_staff_number_input(
             event, user_id, text,
             action="name_role",
-            confirm_text="Изменить роль в организации для «{fio}»?",
+            confirm_text="Изменить должность сотрудника «{fio}» в организации?",
         )
         return
 
@@ -527,7 +527,7 @@ async def step_handler(event: MessageCreated):
         data = get_data(user_id)
         member_id = data.get("staff_target_member_id")
         if member_id is None:
-            await event.message.answer("Не выбран сотрудник.")
+            await event.message.answer("Сотрудник не выбран.")
             clear_state(user_id)
             set_step(user_id, Steps.DONE)
             return
@@ -535,7 +535,7 @@ async def step_handler(event: MessageCreated):
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
             target = get_member_by_id(session, member_id)
             if target is None or target.organization_id != info["org_id"]:
@@ -562,7 +562,7 @@ async def step_handler(event: MessageCreated):
 
     if step == Steps.TASK_CREATE_WEIGHT:
         if not text.isdigit() or not (1 <= int(text) <= 10):
-            await event.message.answer("Введите число от 1 до 10.")
+            await event.message.answer("Введите целое число от 1 до 10.")
             return
         update_data(user_id, task_weight=int(text))
         set_step(user_id, Steps.TASK_CREATE_MINUTES)
@@ -571,7 +571,7 @@ async def step_handler(event: MessageCreated):
 
     if step == Steps.TASK_CREATE_MINUTES:
         if not text.isdigit() or int(text) <= 0:
-            await event.message.answer("Введите положительное число.")
+            await event.message.answer("Введите положительное целое число.")
             return
         update_data(user_id, task_minutes=int(text))
 
@@ -580,7 +580,7 @@ async def step_handler(event: MessageCreated):
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
 
             create_task(
@@ -601,12 +601,12 @@ async def step_handler(event: MessageCreated):
     # --- выбор сотрудника для задачи ---
     if step == Steps.TASK_CREATE_ASSIGNEE_USER:
         if not text.isdigit():
-            await event.message.answer("Введите число.")
+            await event.message.answer("Введите целое число.")
             return
         index = get_data(user_id).get("task_user_index", {})
         user_id_target = index.get(int(text)) or index.get(str(text))
         if user_id_target is None:
-            await event.message.answer("Неверный номер.")
+            await event.message.answer("Указан неверный номер.")
             return
         update_data(user_id, task_assignee_user_id=user_id_target)
         set_step(user_id, Steps.TASK_CREATE_WEIGHT)
@@ -651,7 +651,7 @@ async def step_handler(event: MessageCreated):
 
     if step == Steps.TASK_EDIT_WEIGHT:
         if not text.isdigit() or not (1 <= int(text) <= 10):
-            await event.message.answer("Введите число от 1 до 10.")
+            await event.message.answer("Введите целое число от 1 до 10.")
             return
         task_id = get_data(user_id).get("task_edit_id")
         with db.session() as session:
@@ -663,7 +663,7 @@ async def step_handler(event: MessageCreated):
 
     if step == Steps.TASK_EDIT_MINUTES:
         if not text.isdigit() or int(text) <= 0:
-            await event.message.answer("Введите положительное число.")
+            await event.message.answer("Введите положительное целое число.")
             return
         task_id = get_data(user_id).get("task_edit_id")
         with db.session() as session:
@@ -692,7 +692,7 @@ async def step_handler(event: MessageCreated):
         )
         return
 
-        # === 5A. Дедлайн (разовая) ===
+        # === 5A. Срок исполнения (разовая) ===
     if step == Steps.TASK_DEADLINE:
         try:
             dt = datetime.strptime(text, "%d.%m.%Y %H:%M")
@@ -700,7 +700,7 @@ async def step_handler(event: MessageCreated):
             await event.message.answer(Texts.TASK_INVALID_DATETIME)
             return
         if dt <= datetime.now():
-            await event.message.answer("Дедлайн должен быть в будущем. Введите дату ещё раз.")
+            await event.message.answer("Срок исполнения должен быть позднее текущего момента. Повторите ввод.")
             return
         _save(user_id, "planned_end", dt)
         set_step(user_id, Steps.TASK_START_TIME_ASK)
@@ -719,14 +719,14 @@ async def step_handler(event: MessageCreated):
             return
         planned_end = get_data(user_id).get("task_draft", {}).get("planned_end")
         if planned_end is not None and dt > planned_end:
-            await event.message.answer("Начало не может быть позже дедлайна. Введите дату ещё раз.")
+            await event.message.answer("Время начала не может быть позднее срока исполнения. Повторите ввод.")
             return
         _save(user_id, "planned_start", dt)
         set_step(user_id, Steps.TASK_ESTIMATED_MINUTES)
         await event.message.answer(Texts.TASK_ESTIMATED_MINUTES)
         return
 
-        # === 6B. Дедлайн (постоянная, время суток) — обязателен ===
+        # === 6B. Срок исполнения (постоянная, время суток) — обязателен ===
     if step == Steps.TASK_TIME:
         try:
             t = datetime.strptime(text, "%H:%M").time()
@@ -808,7 +808,7 @@ async def step_handler(event: MessageCreated):
         idx = get_data(user_id).get("task_user_index", {})
         uid = idx.get(int(text)) or idx.get(str(text))
         if uid is None:
-            await event.message.answer("Неверный номер.")
+            await event.message.answer("Указан неверный номер.")
             return
         _save(user_id, "user_id", uid)
         set_step(user_id, Steps.TASK_RECURRENCE)
@@ -828,7 +828,7 @@ async def step_handler(event: MessageCreated):
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
             author_user_id = info["user_id"]
 
@@ -866,13 +866,13 @@ async def step_handler(event: MessageCreated):
 
         d_from = datetime.strptime(from_str, "%Y-%m-%d").date()
         if d_to < d_from:
-            await event.message.answer("Конечная дата раньше начальной.")
+            await event.message.answer("Конечная дата не может быть ранее начальной.")
             return
 
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
 
             try:
@@ -913,7 +913,7 @@ async def contact_handler(event: MessageCreated):
                         break
 
             if not phone:
-                await event.message.answer("Не удалось получить номер, попробуйте ещё раз.")
+                await event.message.answer("Не удалось получить номер телефона. Повторите попытку.")
                 return
 
             # 1. Записываем телефон
@@ -984,17 +984,17 @@ async def handle_org_type(event: MessageCallback):
         with db.session() as session:
             info = check_work(session, user_id)
             if info in (-1, 0) or info["role_id"] != ROLE_OWNER:
-                await event.message.answer("Недостаточно прав.")
+                await event.message.answer("Недостаточно полномочий для выполнения операции.")
                 return
             update_org_type(session, info["org_id"], org_type_id)
 
         clear_state(user_id)
         set_step(user_id, Steps.DONE)
-        await event.message.answer("Тип организации обновлён.")
+        await event.message.answer("Тип организации изменён.")
         await handle_org_settings(event)
         return
 
-    await event.message.answer("Не понимаю, что делать с этим выбором.")
+    await event.message.answer("Выбранное действие не поддерживается.")
 # @router.message_callback(F.callback.payload.startswith("org_type:"))
 # async def handle_org_type(event: MessageCallback):
 #     user_id = event.from_user.user_id
@@ -1012,7 +1012,7 @@ async def handle_org_type(event: MessageCallback):
 #     with db.session() as session:
 #         user = get_user_by_max_id(session, user_id)
 #         if user is None:
-#             await event.message.answer("Сначала зарегистрируйтесь через /start.")
+#             await event.message.answer("Для продолжения необходимо пройти регистрацию: /start.")
 #             return
 #
 #         # Создаём организацию
@@ -1054,7 +1054,7 @@ async def handle_start_menu(event: MessageCallback):
     with db.session() as session:
         user = get_user_by_max_id(session, user_id)
         if user is None:
-            await event.message.answer("Вы не зарегистрированы. Напишите /start.")
+            await event.message.answer("Вы не зарегистрированы. Для регистрации используйте команду /start.")
             return
 
         member = get_member_by_user_id(session, user.user_id)
@@ -1079,7 +1079,7 @@ async def handle_exit(event: MessageCallback):
     with db.session() as session:
         user = get_user_by_max_id(session, user_id)
         if user is None:
-            await event.message.answer("Вы не зарегистрированы. Напишите /start.")
+            await event.message.answer("Вы не зарегистрированы. Для регистрации используйте команду /start.")
             return
 
         member = get_member_by_user_id(session, user.user_id)
@@ -1120,7 +1120,7 @@ async def handle_exit(event: MessageCallback):
         else:
             session.delete(member)
             session.commit()
-            await event.message.answer(f"Вы вышли из организации «{org_name}».")
+            await event.message.answer(f"Вы вышли из состава организации «{org_name}».")
 
     clear_state(user_id)
     set_step(user_id, Steps.DONE)
@@ -1133,7 +1133,7 @@ async def handle_profile(event: MessageCallback):
     with db.session() as session:
         user = get_user_by_max_id(session, user_id)
         if user is None:
-            await event.message.answer("Вы не зарегистрированы. Напишите /start.")
+            await event.message.answer("Вы не зарегистрированы. Для регистрации используйте команду /start.")
             return
 
         name = user.user_name or "—"
@@ -1141,7 +1141,7 @@ async def handle_profile(event: MessageCallback):
         phone = user.number_phone or "—"
 
     await event.message.answer(
-        f"👤 Ваш профиль\n\n"
+        f"Ваш профиль\n\n"
         f"Имя: {name}\n"
         f"Фамилия: {last_name}\n"
         f"Телефон: {phone}",
@@ -1177,11 +1177,11 @@ async def handle_management_announcement(event: MessageCallback):
         info = check_work(session, user_id)
 
     if info in (-1, 0):
-        await event.message.answer("Сначала зарегистрируйтесь и вступите в организацию.")
+        await event.message.answer("Необходимо пройти регистрацию и вступить в организацию.")
         return
 
     if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-        await event.message.answer("У вас нет прав для управления объявлениями.")
+        await event.message.answer("Недостаточно полномочий для управления объявлениями.")
         return
 
     await event.message.answer(
@@ -1202,7 +1202,7 @@ async def handle_announcement_create(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         data = get_data(user_id)
@@ -1244,7 +1244,7 @@ async def handle_announcement_target_all(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         data = get_data(user_id)
@@ -1270,7 +1270,7 @@ async def handle_announcement_target_all(event: MessageCallback):
 
     # 4. Сразу отвечаем админу
     await event.message.answer(
-        f"✅ Объявление поставлено в очередь "
+        f"Объявление поставлено в очередь "
         f"({len(target_ids)} получателей)."
     )
 
@@ -1281,7 +1281,7 @@ async def handle_announcement_target_users(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         members = get_all_org_members(session, info["org_id"])
@@ -1291,10 +1291,10 @@ async def handle_announcement_target_users(event: MessageCallback):
             if m.user_id == info["user_id"]:
                 continue
             builder.row(CallbackButton(
-                text=f"☐ {m.user_id}",   # позже замените на имя
+                text=f"[ ] {m.user_id}",   # позже замените на имя
                 payload=f"announcement_pick:{m.user_id}",
             ))
-        builder.row(CallbackButton(text="✅ Готово", payload="announcement_users_done"))
+        builder.row(CallbackButton(text="Готово", payload="announcement_users_done"))
 
     update_data(user_id, ann_selected=[])
     set_step(user_id, Steps.ANNOUNCEMENT_WAITING_USERS)
@@ -1320,7 +1320,7 @@ async def handle_announcement_pick(event: MessageCallback):
     update_data(user_id, ann_selected=selected)
 
     # Не обязательно обновлять сообщение — можно просто ответить алертом
-    await event.message.answer(f"Выбрано: {len(selected)}")
+    await event.message.answer(f"Выбрано получателей: {len(selected)}")
 
 @router.message_callback(F.callback.payload == "announcement_users_done")
 async def handle_announcement_users_done(event: MessageCallback):
@@ -1329,7 +1329,7 @@ async def handle_announcement_users_done(event: MessageCallback):
     target_ids = data.get("ann_selected", [])
 
     if not target_ids:
-        await event.message.answer("Вы никого не выбрали.")
+        await event.message.answer("Получатели не выбраны.")
         return
 
     with db.session() as session:
@@ -1354,7 +1354,7 @@ async def handle_announcement_users_done(event: MessageCallback):
         try:
             await event.bot.send_message(
                 user_id=uid,
-                text=f"📢 {data.get('ann_title')}\n\n{data.get('ann_body')}",
+                text=f"{data.get('ann_title')}\n\n{data.get('ann_body')}",
                 attachments=[Buttons.builder_announcement_read(ann_id).as_markup()],
             )
         except Exception as e:
@@ -1377,7 +1377,7 @@ async def handle_announcement_read(event: MessageCallback):
             return
         mark_announcement_read(session, ann_id, info["user_id"])
 
-    await event.message.answer("Отмечено как прочитанное ✅")
+    await event.message.answer("Объявление отмечено как прочитанное.")
 
 @router.message_callback(F.callback.payload == "org_informations")
 async def handle_org_informations(event: MessageCallback):
@@ -1387,7 +1387,7 @@ async def handle_org_informations(event: MessageCallback):
         info = check_work(session, user_id)
 
         if info == -1:
-            await event.message.answer("Вы не зарегистрированы. Напишите /start.")
+            await event.message.answer("Вы не зарегистрированы. Для регистрации используйте команду /start.")
             return
         if info == 0:
             await event.message.answer("Вы не состоите ни в одной организации.")
@@ -1408,14 +1408,14 @@ async def handle_org_informations(event: MessageCallback):
     ) or "  • нет сотрудников"
 
     text = (
-        f"🏢 {org['org_name']}\n"
-        f"📍 Город: {org['city']}\n"
-        f"🏷️ Тип: {org['org_type_name']}\n"
+        f"{org['org_name']}\n"
+        f"Город: {org['city']}\n"
+        f"Тип: {org['org_type_name']}\n"
         f"\n"
-        f"👥 Всего сотрудников: {org['members_count']}\n"
+        f"Всего сотрудников: {org['members_count']}\n"
         f"{roles_lines}\n"
         f"\n"
-        f"🔑 Код для приглашения сотрудников:\n"
+        f"Код для приглашения сотрудников:\n"
         f"`{invite_code}`\n"
         f"\n"
         f"Передайте этот код новому сотруднику — он введёт его в боте, "
@@ -1440,7 +1440,7 @@ async def handle_org_settings(event: MessageCallback):
 
         # Настройки доступны только владельцу
         if info["role_id"] != ROLE_OWNER:
-            await event.message.answer("Только владелец может менять настройки.")
+            await event.message.answer("Изменение настроек доступно только владельцу организации.")
             return
 
         org = get_org_info(session, info["org_id"])
@@ -1448,12 +1448,12 @@ async def handle_org_settings(event: MessageCallback):
     invite_code = encode_org_id(info["org_id"])
 
     text = (
-        f"⚙️ Настройки организации\n\n"
-        f"🏢 Название: {org['org_name']}\n"
-        f"📍 Город: {org['city']}\n"
-        f"🏷️ Тип: {org['org_type_name']}\n"
+        f"Настройки организации\n\n"
+        f"Название: {org['org_name']}\n"
+        f"Город: {org['city']}\n"
+        f"Тип: {org['org_type_name']}\n"
         f"\n"
-        f"🔑 Код для приглашения сотрудников:\n"
+        f"Код для приглашения сотрудников:\n"
         f"`{invite_code}`\n"
         f"\n"
         f"Передайте этот код новому сотруднику — он введёт его в боте."
@@ -1483,13 +1483,13 @@ async def handle_org_edit_type(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] != ROLE_OWNER:
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         org_types = get_all_org_types(session)
 
     if not org_types:
-        await event.message.answer("Типы организаций не настроены.")
+        await event.message.answer("Типы организаций не заданы.")
         return
 
     set_step(user_id, Steps.ORG_WAITING_TYPE)
@@ -1514,7 +1514,7 @@ async def handle_org_type_pick(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] != ROLE_OWNER:
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         update_org_type(session, info["org_id"], org_type_id)
@@ -1535,9 +1535,9 @@ async def handle_announcements(event: MessageCallback):
 def format_announcement(ann) -> str:
     created = ann.created_at.strftime("%d.%m.%Y %H:%M") if ann.created_at else "—"
     return (
-        f"📢 {ann.title or '—'}\n"
+        f"{ann.title or '—'}\n"
         f"{ann.body}\n"
-        f"🕒 {created}"
+        f"{created}"
     )
 
 
@@ -1577,7 +1577,7 @@ async def handle_ann_list_today(event: MessageCallback):
         anns = get_today_announcements(session, info["user_id"])
 
     if not anns:
-        await event.message.answer("Сегодня объявлений не было.")
+        await event.message.answer("Сегодня объявления не публиковались.")
         return
 
     for ann in anns:
@@ -1619,7 +1619,7 @@ async def handle_manage_staff(event: MessageCallback):
             await event.message.answer("Вы не состоите в организации.")
             return
         if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("У вас нет прав для управления сотрудниками.")
+            await event.message.answer("Недостаточно полномочий для управления сотрудниками.")
             return
 
         rows = get_org_members_full(session, info["org_id"])
@@ -1679,7 +1679,7 @@ async def _handle_staff_number_input(event, user_id: int, text: str, action: str
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         target = get_member_by_id(session, member_id)
@@ -1696,13 +1696,13 @@ async def _handle_staff_number_input(event, user_id: int, text: str, action: str
                 await event.message.answer(Texts.STAFF_CANNOT_FIRE_OWNER)
                 return
             if info["role_id"] == ROLE_ADMIN and target.role_id == ROLE_ADMIN:
-                await event.message.answer("Администратор не может увольнять администраторов.")
+                await event.message.answer("Администратор не вправе исключать администраторов.")
                 return
 
         if action in ("role", "name_role"):
             if info["role_id"] == ROLE_ADMIN and target.role_id in (ROLE_OWNER, ROLE_ADMIN):
                 await event.message.answer(
-                    "Администратор не может менять роли владельца и админов."
+                    "Администратор не вправе изменять роли владельца и администраторов."
                 )
                 return
 
@@ -1738,7 +1738,7 @@ async def handle_staff_confirm(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         target = get_member_by_id(session, member_id)
@@ -1755,7 +1755,7 @@ async def handle_staff_confirm(event: MessageCallback):
                 await event.message.answer(Texts.STAFF_CANNOT_FIRE_OWNER)
                 return
             if info["role_id"] == ROLE_ADMIN and target.role_id == ROLE_ADMIN:
-                await event.message.answer("Администратор не может увольнять администраторов.")
+                await event.message.answer("Администратор не вправе исключать администраторов.")
                 return
 
             fire_member(session, member_id)
@@ -1766,7 +1766,7 @@ async def handle_staff_confirm(event: MessageCallback):
 
         if action == "role":
             if info["role_id"] == ROLE_ADMIN and target.role_id in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Администратор не может менять роли владельца и админов.")
+                await event.message.answer("Администратор не вправе изменять роли владельца и администраторов.")
                 return
 
             # запоминаем цель и просим выбрать роль
@@ -1780,7 +1780,7 @@ async def handle_staff_confirm(event: MessageCallback):
 
         if action == "name_role":
             if info["role_id"] == ROLE_ADMIN and target.role_id in (ROLE_OWNER, ROLE_ADMIN):
-                await event.message.answer("Администратор не может менять роли владельца и админов.")
+                await event.message.answer("Администратор не вправе изменять роли владельца и администраторов.")
                 return
 
             update_data(user_id, staff_target_member_id=member_id)
@@ -1799,17 +1799,17 @@ async def handle_staff_set_role(event: MessageCallback):
     data = get_data(user_id)
     member_id = data.get("staff_target_member_id")
     if member_id is None:
-        await event.message.answer("Не выбран сотрудник.")
+        await event.message.answer("Сотрудник не выбран.")
         return
 
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         if info["role_id"] == ROLE_ADMIN and new_role_id in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Администратор не может назначать владельца/админов.")
+            await event.message.answer("Администратор не вправе назначать владельца и администраторов.")
             return
 
         target = get_member_by_id(session, member_id)
@@ -1818,7 +1818,7 @@ async def handle_staff_set_role(event: MessageCallback):
             return
 
         if target.role_id == ROLE_OWNER and new_role_id != ROLE_OWNER:
-            await event.message.answer("Нельзя понизить владельца.")
+            await event.message.answer("Понижение роли владельца не допускается.")
             return
 
         set_member_role(session, member_id, new_role_id)
@@ -1845,7 +1845,7 @@ async def handle_manage_tasks(event: MessageCallback):
         await event.message.answer("Вы не состоите в организации.")
         return
     if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-        await event.message.answer("У вас нет прав для управления задачами.")
+        await event.message.answer("Недостаточно полномочий для управления задачами.")
         return
 
     await event.message.answer(
@@ -1860,7 +1860,7 @@ async def handle_task_active(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         items = get_active_instances(session, info["org_id"])
@@ -1873,11 +1873,11 @@ async def handle_task_active(event: MessageCallback):
     for it in items:
         deadline = it["planned_end"].strftime("%d.%m %H:%M") if it["planned_end"] else "—"
         lines.append(
-            f"👤 {it['assignee']}\n"
-            f"   📌 {it['title']}\n"
-            f"   ⏰ до {deadline}   ⚖️ вес {it['weight']}"
+            f"{it['assignee']}\n"
+            f"   {it['title']}\n"
+            f"   Срок: до {deadline}; вес: {it['weight']}"
         )
-    await event.message.answer("👀 Активные задачи:\n\n" + "\n\n".join(lines))
+    await event.message.answer("Задачи в работе:\n\n" + "\n\n".join(lines))
 
 @router.message_callback(F.callback.payload == "task_pool")
 async def handle_task_pool(event: MessageCallback):
@@ -1910,8 +1910,8 @@ async def handle_task_pool(event: MessageCallback):
     for it in items:
         deadline = it["planned_end"].strftime("%d.%m %H:%M") if it["planned_end"] else "—"
         lines.append(
-            f"{it['number']}. 📌 {it['title']}\n"
-            f"   ⏰ до {deadline}   ⚖️ вес {it['weight']}"
+            f"{it['number']}. {it['title']}\n"
+            f"   Срок: до {deadline}; вес: {it['weight']}"
         )
 
     await event.message.answer(
@@ -1944,9 +1944,9 @@ async def handle_task_take(event: MessageCallback):
         ok = take_task_from_pool(session, instance_id, info["user_id"], org_id=info["org_id"])
 
     if ok:
-        await event.message.answer(f"Задача №{n} взята в работу ✅")
+        await event.message.answer(f"Задача №{n} принята в работу.")
     else:
-        await event.message.answer("Не удалось взять задачу — возможно, её уже взяли.")
+        await event.message.answer("Не удалось принять задачу: она уже назначена другому сотруднику.")
 
 @router.message_callback(F.callback.payload == "task_edit")
 async def handle_task_edit(event: MessageCallback):
@@ -1955,7 +1955,7 @@ async def handle_task_edit(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         rows = (
@@ -1966,7 +1966,7 @@ async def handle_task_edit(event: MessageCallback):
         )
 
     if not rows:
-        await event.message.answer("Нет активных задач.")
+        await event.message.answer("Активные задачи отсутствуют.")
         return
 
     index = {i: t.task_id for i, t in enumerate(rows, start=1)}
@@ -2008,7 +2008,7 @@ async def handle_task_cancel(event: MessageCallback):
     user_id = event.from_user.user_id
     clear_state(user_id)
     set_step(user_id, Steps.DONE)
-    await event.message.answer("Отменено.")
+    await event.message.answer("Операция отменена.")
 
 @router.message_callback(F.callback.payload == "task_assignee_role")
 async def handle_task_assignee_role(event: MessageCallback):
@@ -2024,7 +2024,7 @@ async def handle_task_confirm_create(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         if d.get("is_regular"):
@@ -2102,7 +2102,7 @@ async def handle_task_confirm_create(event: MessageCallback):
         try:
             await event.bot.send_message(
                 user_id=max_id,
-                text=f"📌 Вам назначена задача: {d['title']}",
+                text=f"Вам назначена задача: {d['title']}",
             )
         except Exception as e:
             logging.warning("Не доставлено %s: %s", max_id, e)
@@ -2114,7 +2114,7 @@ async def handle_task_create(event: MessageCallback):
     with db.session() as session:
         info = check_work(session, user_id)
     if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-        await event.message.answer("Недостаточно прав.")
+        await event.message.answer("Недостаточно полномочий для выполнения операции.")
         return
 
     clear_state(user_id)
@@ -2143,7 +2143,7 @@ async def handle_task_assignee_user(event: MessageCallback):
     set_step(user_id, Steps.TASK_ASSIGNEE)   # остаёмся на этом шаге, но ждём цифру
     # важно: введём отдельный шаг для ввода номера
     set_step(user_id, "task_assignee_user_number")
-    await event.message.answer("Выберите номер сотрудника:\n" + "\n".join(lines))
+    await event.message.answer("Введите номер сотрудника из списка:\n" + "\n".join(lines))
 
 @router.message_callback(F.callback.payload == "task_recurrence_onetime")
 async def handle_task_onetime(event: MessageCallback):
@@ -2259,30 +2259,30 @@ async def handle_task_weight(event: MessageCallback):
 
 def _format_draft(d: dict) -> str:
     lines = [
-        f"📌 Название: {d.get('title', '—')}",
-        f"📝 Описание: {d.get('description') or '—'}",
+        f"Название: {d.get('title', '—')}",
+        f"Описание: {d.get('description') or '—'}",
     ]
     if d.get("external_role_name"):
-        lines.append(f"🏷️ Внешняя должность: {d['external_role_name']}")
+        lines.append(f"Внешняя должность: {d['external_role_name']}")
     elif d.get("user_id"):
-        lines.append(f"👤 UserId: {d['user_id']}")
+        lines.append(f"Исполнитель (идентификатор): {d['user_id']}")
     else:
-        lines.append("🆓 Открытая (в пул)")
+        lines.append("🆓 Свободная (в общий перечень)")
 
-    lines.append(f"🔁 Разовая: {'нет' if d.get('is_regular') else 'да'}")
+    lines.append(f"Однократная: {'нет' if d.get('is_regular') else 'да'}")
     if d.get("is_regular"):
-        lines.append(f"📅 Дни (маска): {d.get('weekday_mask')}")
-        lines.append(f"⏰ Дедлайн: {d['time'].strftime('%H:%M') if d.get('time') else '—'}")
+        lines.append(f"Дни недели (маска): {d.get('weekday_mask')}")
+        lines.append(f"Срок исполнения: {d['time'].strftime('%H:%M') if d.get('time') else '—'}")
         start_t = d.get("start_time")
-        lines.append(f"▶️ Начало: {start_t.strftime('%H:%M') if start_t else '—'}")
+        lines.append(f"Время начала: {start_t.strftime('%H:%M') if start_t else '—'}")
 
-        lines.append(f"📆 {d.get('start_date')} — {d.get('end_date') or '∞'}")
+        lines.append(f"{d.get('start_date')} — {d.get('end_date') or '∞'}")
     else:
-        lines.append(f"⏰ Дедлайн: {d.get('planned_end')}")
-        lines.append(f"▶️ Начало: {d.get('planned_start') or '—'}")
+        lines.append(f"Срок исполнения: {d.get('planned_end')}")
+        lines.append(f"Время начала: {d.get('planned_start') or '—'}")
 
-    lines.append(f"⏱️ Минут: {d.get('estimated_minutes')}")
-    lines.append(f"⚖️ Вес: {d.get('weight')}")
+    lines.append(f"Плановая продолжительность (мин): {d.get('estimated_minutes')}")
+    lines.append(f"Вес: {d.get('weight')}")
     return "\n".join(lines)
 
 # @router.message_callback(F.callback.payload == "task_confirm_create")
@@ -2293,7 +2293,7 @@ def _format_draft(d: dict) -> str:
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         if d.get("is_regular"):
@@ -2383,7 +2383,7 @@ async def handle_announcement_my_list(event: MessageCallback):
             await event.message.answer("Вы не состоите в организации.")
             return
         if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-            await event.message.answer("Недостаточно прав.")
+            await event.message.answer("Недостаточно полномочий для выполнения операции.")
             return
 
         author_user_id = info["user_id"]
@@ -2412,7 +2412,7 @@ async def _show_my_announcements(event, author_user_id: int, day: date):
             stats = get_announcement_stats(session, a.announcement_id)
         t = a.title or "—"
         lines.append(
-            f"📢 {t}\n"
+            f"{t}\n"
             f"   всего: {stats['total']}, "
             f"прочитано: {stats['read']}, "
             f"не прочитано: {stats['unread']}"
@@ -2505,12 +2505,12 @@ async def handle_ann_my_view(event: MessageCallback):
         created = ann.created_at.strftime("%d.%m.%Y %H:%M") if ann.created_at else "—"
         date_str = ann.created_at.strftime("%Y-%m-%d") if ann.created_at else date.today().strftime("%Y-%m-%d")
         text = (
-            f"📢 {ann.title or '—'}\n"
+            f"{ann.title or '—'}\n"
             f"{ann.body}\n"
-            f"🕒 {created}\n\n"
+            f"{created}\n\n"
             f"Всего: {stats['total']}\n"
-            f"✅ Прочитали: {stats['read']}\n"
-            f"⏳ Не прочитали: {stats['unread']}"
+            f"Прочитали: {stats['read']}\n"
+            f"Не прочитали: {stats['unread']}"
         )
 
     await event.message.answer(
@@ -2557,7 +2557,7 @@ async def _show_recipients(event, kind: str):
         split = get_announcement_recipients_split(session, ann_id)
 
     names = split[kind]
-    header = "✅ Прочитали:" if kind == "read" else "⏳ Не прочитали:"
+    header = "Прочитали:" if kind == "read" else "Не прочитали:"
     if not names:
         body = "— никого"
     else:
@@ -2579,7 +2579,7 @@ async def handle_get_statistiks(event: MessageCallback):
         await event.message.answer("Вы не состоите в организации.")
         return
     if info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-        await event.message.answer("Недостаточно прав.")
+        await event.message.answer("Недостаточно полномочий для выполнения операции.")
         return
 
     await event.message.answer(
@@ -2614,7 +2614,7 @@ async def handle_report_task_completion(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         try:
@@ -2675,10 +2675,10 @@ async def handle_my_tasks(event: MessageCallback):
         it["number"] = i
 
         deadline = it["planned_end"].strftime("%d.%m %H:%M") if it["planned_end"] else "—"
-        status = "🟡 не начата" if it["actual_start"] is None else "🟢 в работе"
+        status = "не начата" if it["actual_start"] is None else "в работе"
         lines.append(
             f"{i}. {it['title']}\n"
-            f"   ⏰ до {deadline}   ⚖️ вес {it['weight']}   {status}"
+            f"   Срок: до {deadline}; вес: {it['weight']}; статус: {status}"
         )
 
     await event.message.answer(
@@ -2739,14 +2739,14 @@ async def _show_my_task(event, detailed: bool = False):
         can_finish = inst.actual_end is None
 
     text = (
-        f"📌 {title}\n\n"
-        f"📝 {description}\n\n"
-        f"⏰ Начало: {planned_start}\n"
-        f"⏰ Дедлайн: {planned_end}\n"
-        f"⚖️ Вес: {weight}\n"
-        f"⏱️ Оценка: {est_min} мин\n"
-        f"▶️ Факт старта: {actual_start}\n"
-        f"✅ Факт завершения: {actual_end}"
+        f"{title}\n\n"
+        f"{description}\n\n"
+        f"Начало: {planned_start}\n"
+        f"Срок исполнения: {planned_end}\n"
+        f"Вес: {weight}\n"
+        f"Плановая продолжительность: {est_min} мин\n"
+        f"Фактическое начало: {actual_start}\n"
+        f"Фактическое завершение: {actual_end}"
     )
 
     await event.message.answer(
@@ -2779,7 +2779,7 @@ async def handle_my_task_start(event: MessageCallback):
     if ok:
         await event.message.answer(Texts.MY_TASKS_STARTED)
     else:
-        await event.message.answer("Не удалось начать задачу — возможно, она уже в работе или завершена.")
+        await event.message.answer("Не удалось приступить к выполнению: задача уже выполняется либо завершена.")
 
     await _show_my_task(event)
 
@@ -2816,7 +2816,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         rows = get_org_members_full(session, info["org_id"])
@@ -2850,7 +2850,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         target = get_member_by_id(session, member_id)
@@ -2860,7 +2860,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #
 #         # админ не может менять роли владельца и других админов
 #         if info["role_id"] == ROLE_ADMIN and target.role_id in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Администратор не может менять роли владельца и админов.")
+#             await event.message.answer("Администратор не вправе изменять роли владельца и администраторов.")
 #             return
 #
 #     await event.message.answer(
@@ -2880,14 +2880,14 @@ async def handle_my_task_finish(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         # последний выбранный сотрудник хранится в состоянии — или передавайте member_id в payload
 #         data = get_data(user_id)
 #         member_id = data.get("staff_target_member_id")
 #         if member_id is None:
-#             await event.message.answer("Не выбран сотрудник.")
+#             await event.message.answer("Сотрудник не выбран.")
 #             return
 #
 #         target = get_member_by_id(session, member_id)
@@ -2897,7 +2897,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #
 #         # админ не может назначать владельца/админа
 #         if info["role_id"] == ROLE_ADMIN and new_role_id in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Администратор не может назначать владельца/админов.")
+#             await event.message.answer("Администратор не вправе назначать владельца и администраторов.")
 #             return
 #
 #         # нельзя снять владельца, если он один — оставляем владельца всегда
@@ -2925,7 +2925,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         target = get_member_by_id(session, member_id)
@@ -2949,7 +2949,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #     with db.session() as session:
 #         info = check_work(session, user_id)
 #         if info in (-1, 0) or info["role_id"] not in (ROLE_OWNER, ROLE_ADMIN):
-#             await event.message.answer("Недостаточно прав.")
+#             await event.message.answer("Недостаточно полномочий для выполнения операции.")
 #             return
 #
 #         target = get_member_by_id(session, member_id)
@@ -2969,7 +2969,7 @@ async def handle_my_task_finish(event: MessageCallback):
 #
 #         # админ не может уволить другого админа
 #         if info["role_id"] == ROLE_ADMIN and target.role_id == ROLE_ADMIN:
-#             await event.message.answer("Администратор не может увольнять администраторов.")
+#             await event.message.answer("Администратор не вправе исключать администраторов.")
 #             return
 #
 #         fire_member(session, member_id)
