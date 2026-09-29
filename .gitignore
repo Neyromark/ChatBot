@@ -1,0 +1,12 @@
+venv/
+.explyt/
+.idea/
+.git/
+__pycache__/
+utils/__pycache__/
+scheduler/__pycache__/
+reports/__pycache__/
+mailing/__pycache__/
+bot/__pycache__/
+.DS_Store
+.env
