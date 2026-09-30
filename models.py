@@ -222,4 +222,3 @@ class TaskInstance(Base):
 
     def __repr__(self):
         return f"<TaskInstance(instance_id={self.instance_id}, task_id={self.task_id}, status_id={self.status_id})>"
-

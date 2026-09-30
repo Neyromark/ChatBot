@@ -14,6 +14,7 @@ import logging
 from save_config import settings
 from database import Database
 from mailing.queue import start_worker
+from mailing.miniapp_link import start_miniapp_link, stop_miniapp_link
 from scheduler import start_worker as start_schedule_worker, start_reminder_worker
 
 
@@ -41,13 +42,14 @@ async def main():
     start_worker(bot)
     start_schedule_worker()
     start_reminder_worker(bot)
+    start_miniapp_link(bot)
 
 
     logging.info("Запуск бота...")
     try:
         await dp.start_polling(bot)
     finally:
-        pass
+        await stop_miniapp_link()
         db.dispose()
 
 
